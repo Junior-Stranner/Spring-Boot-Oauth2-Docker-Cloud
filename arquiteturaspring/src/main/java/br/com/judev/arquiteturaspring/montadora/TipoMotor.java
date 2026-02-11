@@ -1,7 +1,7 @@
 package br.com.judev.arquiteturaspring.montadora;
 
 public enum TipoMotor {
-    ASPIRDO,
+    ASPIRADO,
     TURBO,
     ELETRICO
 }
