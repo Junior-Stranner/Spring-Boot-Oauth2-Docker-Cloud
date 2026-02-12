@@ -12,3 +12,33 @@ app:
   config:
     variavel: valor da variavel X
     valor1: 500
+
+
+#Esse application.yml está coerente e vai funcionar com o que você mostrou.
+#
+#Resumo do que ele vai fazer no seu projeto:
+#
+#spring.application.name: Arquitetura Spring
+#
+#Você consegue ler isso via environment.getProperty("spring.application.name") (como no seu main).
+#
+#spring.jpa.show-sql: true
+#
+#Vai imprimir os SQLs do Hibernate no console (aqueles Hibernate: select ...).
+#
+#spring.main.lazy-initialization: false
+#
+#Mantém o padrão: o Spring cria os beans no startup (a não ser que algum bean tenha @Lazy, como seu BeanGerenciado,
+#que continua sendo lazy mesmo assim).
+#
+#app.config.variavel e app.config.valor1
+#
+#Esses dois vão alimentar:
+#
+#@Value("${app.config.variavel}") no ExemploValue
+#@ConfigurationProperties(prefix="app.config") no AppProperties (variavel e valor1)
+#app.montadora.motor-padrao: 130
+#
+#Só será usado se você tiver alguma classe @ConfigurationProperties(prefix="app.montadora") (ou @Value) lendo isso.
+#
+#Observação rápida: o nome do arquivo/caminho tem que ser src/main/resources/application.yml para o Spring Boot carregar. Se estiver em src/resources/..., ele não lê.
