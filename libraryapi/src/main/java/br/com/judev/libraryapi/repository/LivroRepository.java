@@ -3,14 +3,12 @@ package br.com.judev.libraryapi.repository;
 import br.com.judev.libraryapi.model.Autor;
 import br.com.judev.libraryapi.model.GeneroLivro;
 import br.com.judev.libraryapi.model.Livro;
-import org.hibernate.query.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.awt.print.Pageable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
