@@ -1,7 +1,6 @@
 package br.com.judev.libraryapi.controller;
 
 import br.com.judev.libraryapi.controller.dto.AutorDTO;
-import br.com.judev.libraryapi.controller.mappers.AutorMapper;
 import br.com.judev.libraryapi.model.Autor;
 import br.com.judev.libraryapi.service.AutorService;
 import jakarta.validation.Valid;
@@ -19,20 +18,18 @@ import java.net.URI;
 public class AutorController {
 
     private final AutorService autorService;
-    private final AutorMapper mapper;
 
-    public AutorController(AutorService autorService, AutorMapper mapper) {
+    public AutorController(AutorService autorService) {
         this.autorService = autorService;
-        this.mapper = mapper;
     }
 
     @PostMapping
     public ResponseEntity<Void> salvar(@RequestBody @Valid AutorDTO dto) {
-        Autor autor = mapper.toEntity(dto);
+        Autor autor = dto.toEntity(); // usa o método do próprio DTO
         autorService.salvar(autor);
         URI location = ServletUriComponentsBuilder
-                    .fromCurrentRequest()
-                    .path("{id}")
+                .fromCurrentRequest()     // ex: http://localhost:8080/autores
+                .path("/{id}")            // importante: com a "/" antes do {id}
                     .buildAndExpand(autor.getId())
                     .toUri();
         return ResponseEntity.created(location).build();
