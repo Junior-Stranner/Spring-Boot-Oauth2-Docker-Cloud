@@ -1,4 +1,4 @@
-package config;
+package br.com.judev.libraryapi.config;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
