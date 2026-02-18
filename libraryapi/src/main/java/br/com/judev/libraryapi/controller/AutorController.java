@@ -44,8 +44,8 @@ public class AutorController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Void> atualizar(@PathVariable("id") String id, @RequestBody @Valid AutorDTO dto) {
-
+    public ResponseEntity<?> atualizar(@PathVariable("id") String id, @RequestBody @Valid AutorDTO dto) {
+     try{
         var idAutor = UUID.fromString(id);
         Optional<Autor> autorOptional = autorService.obterPorId(idAutor);
 
@@ -60,6 +60,10 @@ public class AutorController {
         autorService.atualizar(autor);
 
         return ResponseEntity.noContent().build();
+     }catch (RegistroDuplicadoException e){
+         var erroDTO = ErroResposta.conflito(e.getMessage());
+         return ResponseEntity.status(erroDTO.status()).body(erroDTO);
+      }
     }
 
     @GetMapping("{id}")
