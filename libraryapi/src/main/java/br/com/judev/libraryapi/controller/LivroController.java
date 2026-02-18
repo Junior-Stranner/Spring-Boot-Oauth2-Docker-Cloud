@@ -6,7 +6,6 @@ import br.com.judev.libraryapi.exceptions.RegistroDuplicadoException;
 import br.com.judev.libraryapi.model.Livro;
 import br.com.judev.libraryapi.service.LivroService;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,7 +17,6 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("livros")
-@RequiredArgsConstructor
 public class LivroController {
 
     private final LivroService livroService;
