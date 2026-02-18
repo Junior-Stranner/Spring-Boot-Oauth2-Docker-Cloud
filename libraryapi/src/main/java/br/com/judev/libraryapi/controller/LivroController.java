@@ -2,22 +2,21 @@ package br.com.judev.libraryapi.controller;
 
 import br.com.judev.libraryapi.controller.dto.CadastroLivroDTO;
 import br.com.judev.libraryapi.controller.dto.ErroResposta;
+import br.com.judev.libraryapi.controller.dto.ResultadoPesquisaLivroDTO;
 import br.com.judev.libraryapi.exceptions.RegistroDuplicadoException;
 import br.com.judev.libraryapi.model.Livro;
 import br.com.judev.libraryapi.service.LivroService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("livros")
-public class LivroController {
+public class LivroController implements GenericController{
 
     private final LivroService livroService;
 
@@ -26,22 +25,27 @@ public class LivroController {
     }
 
     @PostMapping
-    public ResponseEntity<?> salvar(@RequestBody @Valid CadastroLivroDTO dto) {
-        try {
-            Livro livro = dto.toEntity();
-            livroService.salvar(livro);
+    public ResponseEntity<Void> salvar(@RequestBody @Valid CadastroLivroDTO dto) {
+        Livro livro = dto.toEntity();
+        livroService.salvar(livro);
+        var url = gerarHeaderLocation(livro.getId());
+        return ResponseEntity.created(url).build();
+    }
 
-            URI location = ServletUriComponentsBuilder
-                    .fromCurrentRequest()   // ex: http://localhost:8080/livros
-                    .path("/{id}")
-                    .buildAndExpand(livro.getId())
-                    .toUri();
+    @GetMapping("/{id}")
+    public ResponseEntity<ResultadoPesquisaLivroDTO> obterDetalhes(@PathVariable UUID id) {
 
-            return ResponseEntity.created(location).build();
+        return livroService.obterPorId(id)
+                .map(livro -> ResponseEntity.ok(ResultadoPesquisaLivroDTO.toDTO(livro)))
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
 
-        } catch (RegistroDuplicadoException e) {
-            var erroDTO = ErroResposta.conflito(e.getMessage());
-            return ResponseEntity.status(erroDTO.status()).body(erroDTO);
-        }
+    @DeleteMapping("{id}")
+    public ResponseEntity<Object> deletar(@PathVariable("id") String id){
+        return livroService.obterPorId(UUID.fromString(id))
+                .map(livro -> {
+                    livroService.deletar(livro);
+                    return ResponseEntity.noContent().build();
+                }).orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/v1/autores")
-public class AutorController {
+public class AutorController implements GenericController{
 
     private final AutorService autorService;
 
@@ -27,20 +27,12 @@ public class AutorController {
     }
 
     @PostMapping
-    public ResponseEntity<?> salvar(@RequestBody @Valid AutorDTO dto) {
-        try {
-            Autor autor = dto.toEntity(); // usa o método do próprio DTO
-            autorService.salvar(autor);
-            URI location = ServletUriComponentsBuilder
-                    .fromCurrentRequest()     // ex: http://localhost:8080/autores
-                    .path("/{id}")            // importante: com a "/" antes do {id}
-                    .buildAndExpand(autor.getId())
-                    .toUri();
-            return ResponseEntity.created(location).build();
-        }catch (RegistroDuplicadoException e){
-            var erroDTO = ErroResposta.conflito(e.getMessage());
-            return ResponseEntity.status(erroDTO.status()).body(erroDTO);
-        }
+    public ResponseEntity<Void> salvar(@RequestBody @Valid AutorDTO dto) {
+
+        Autor autor = dto.toEntity();
+        autorService.salvar(autor);
+        URI location = gerarHeaderLocation(autor.getId());
+        return ResponseEntity.created(location).build();
     }
 
     @PutMapping("{id}")

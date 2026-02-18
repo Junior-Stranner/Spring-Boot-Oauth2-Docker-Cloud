@@ -3,6 +3,9 @@ package br.com.judev.libraryapi.repository;
 import br.com.judev.libraryapi.model.Autor;
 import br.com.judev.libraryapi.model.GeneroLivro;
 import br.com.judev.libraryapi.model.Livro;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -88,4 +91,6 @@ public interface LivroRepository extends JpaRepository<Livro, UUID> {
     boolean existsByAutor(Autor autor);
 
     boolean existsByIsbn(String isbn);
+
+    Page<Livro> findAll(Specification<Livro> specs, Pageable pageRequest);
 }
