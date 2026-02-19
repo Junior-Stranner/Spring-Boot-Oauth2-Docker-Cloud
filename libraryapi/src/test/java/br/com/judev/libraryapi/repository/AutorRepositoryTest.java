@@ -21,10 +21,10 @@ public class AutorRepositoryTest {
     AutorRepository repository;
 
     @Autowired
-    LivroRepositoryTest livroRepository;
+    LivroRepository livroRepository;
 
     @Test
-    public void salvarTest() {
+    public void salvarTest(){
         Autor autor = new Autor();
         autor.setNome("José");
         autor.setNacionalidade("Brasileira");
@@ -35,14 +35,14 @@ public class AutorRepositoryTest {
     }
 
     @Test
-    public void atualizarTest() {
+    public void atualizarTest(){
         var id = UUID.fromString("2449f4e4-ee1a-4a71-8aa3-e9d46306fe8a");
 
         Optional<Autor> possivelAutor = repository.findById(id);
 
-        if (possivelAutor.isPresent()) {
+        if(possivelAutor.isPresent()){
 
-            Autor autorEncontrado = possivelAutor.get();
+            Autor autorEncontrado =  possivelAutor.get();
             System.out.println("Dados do Autor:");
             System.out.println(autorEncontrado);
 
@@ -54,31 +54,31 @@ public class AutorRepositoryTest {
     }
 
     @Test
-    public void listarTest() {
+    public void listarTest(){
         List<Autor> lista = repository.findAll();
         lista.forEach(System.out::println);
     }
 
     @Test
-    public void countTest() {
+    public void countTest(){
         System.out.println("Contagem de autores: " + repository.count());
     }
 
     @Test
-    public void deletePorIdTest() {
+    public void deletePorIdTest(){
         var id = UUID.fromString("2449f4e4-ee1a-4a71-8aa3-e9d46306fe8a");
         repository.deleteById(id);
     }
 
     @Test
-    public void deleteTest() {
+    public void deleteTest(){
         var id = UUID.fromString("abc082bf-1d23-4767-b3d9-9f322856ca6a");
         var maria = repository.findById(id).get();
         repository.delete(maria);
     }
 
     @Test
-    void salvarAutorComLivrosTest() {
+    void salvarAutorComLivrosTest(){
         Autor autor = new Autor();
         autor.setNome("Antonio");
         autor.setNacionalidade("Americana");
@@ -110,8 +110,8 @@ public class AutorRepositoryTest {
     }
 
     @Test
-    void listarLivrosAutor() {
-        var id = UUID.fromString("27c51581-8dfb-4b78-8c52-3965f6496f01");
+    void listarLivrosAutor(){
+        var id = UUID.fromString("66c0d599-16d9-4edd-b8f8-7cac168eabb5");
         var autor = repository.findById(id).get();
 
         // buscar os livros do autor
