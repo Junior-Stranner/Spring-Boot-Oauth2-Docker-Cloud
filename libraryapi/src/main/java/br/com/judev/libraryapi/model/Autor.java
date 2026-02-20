@@ -47,9 +47,9 @@ public class Autor {
     @Column(name = "data_atualizacao")
     private LocalDateTime dataAtualizacao;
 
-    @ManyToOne
+ /*   @ManyToOne
     @JoinColumn(name = "id_usuario")
-    private Usuario usuario;
+    private Usuario usuario;*/
 
     public Autor(UUID id, String nome, LocalDateTime dataAtualizacao, String nacionalidade) {
     }
