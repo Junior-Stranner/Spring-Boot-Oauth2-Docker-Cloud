@@ -16,15 +16,13 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
         Usuario usuario = service.obterPorLogin(login);
-
-        if(usuario == null){
-            throw new UsernameNotFoundException("Usuario não encontrado!");
+            if(usuario == null){
+                throw new UsernameNotFoundException("Usuario não encontrado!");
+            }
+            return User.builder()
+                    .username(usuario.getLogin())
+                    .password(usuario.getSenha())
+                    .roles(usuario.getRoles().toArray(new String[usuario.getRoles().size()]))
+                    .build();
         }
-
-        return User.builder()
-                .username(usuario.getLogin())
-                .password(usuario.getSenha())
-                .roles(usuario.getRoles().toArray(new String[usuario.getRoles().size()]))
-                .build();
-    }
 }
