@@ -41,7 +41,7 @@ public class AutorController implements GenericController{
     public ResponseEntity<Void> salvar(@RequestBody @Valid AutorDTO dto) {
 //        UserDetails userLogado = (UserDetails) authentication.getPrincipal();
 //        Usuario usuario = usuarioService.obterPorLogin(userLogado.getUsername());
-        Usuario usuario = securityService.obterUsuarioLogado();
+//        Usuario usuario = securityService.obterUsuarioLogado();
         Autor autor = dto.toEntity();
         autorService.salvar(autor);
         URI location = gerarHeaderLocation(autor.getId());

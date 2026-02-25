@@ -1,4 +1,3 @@
-
 create table autor(
   id uuid not null primary key,
   nome varchar(100) not null,
@@ -21,6 +20,37 @@ create table livro (
    id_usuario uuid,
    id_autor uuid not null references autor(id),
    constraint chk_genero check (genero in ('FICCAO', 'FANTASIA', 'MISTERIO','ROMANCE', 'BIOGRAFIA', 'CIENCIA') )
+);
+
+create table usuario (
+  id uuid primary key,
+  email varchar(150),
+  login varchar(60) not null unique,
+  senha varchar(255) not null,
+  roles varchar(255)
+);
+
+select * from usuario where login = 'gerente';
+
+select * from autor
+where id_usuario = (select id from usuario where login = 'gerente');
+
+select a.*, u.login
+from autor a
+join usuario u on u.id = a.id_usuario
+where u.login = 'gerente';
+
+update usuario
+set roles = ARRAY['ROLE_GERENTE']
+where login = 'gerente'
+
+insert into usuario (id, email, login, roles, senha)
+values (
+  gen_random_uuid(),
+  'gerente@teste.com',
+  'gerente',
+  'ROLE_GERENTE',
+  '$2a$10$COLE_AQUI_O_HASH_BCRYPT'
 );
 
 -- deleta tabela usuario
@@ -52,7 +82,6 @@ insert into usuario
 values
 ( uuid_generate_v4(), 'gerente', '$2a$12$u./yCEmhTdXjlyvV80sQKOfmO1Ab9HfI7HrOu6dzNa9hkdB5p9A6u
 ', 'gerente@email.com', '{GERENTE}' );
-
 
 insert into client
 (id, client_id, client_secret, redirect_uri, scope)

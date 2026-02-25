@@ -1,6 +1,9 @@
 package br.com.judev.libraryapi.config;
 
+import br.com.judev.libraryapi.security.CustomAuthenticationProvider;
+import br.com.judev.libraryapi.security.LoginSocialSuccessHandler;
 import br.com.judev.libraryapi.service.AutorService;
+import lombok.RequiredArgsConstructor;
 import org.hibernate.boot.internal.Abstract;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,19 +20,34 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
+@EnableMethodSecurity
 public class SecurityConfiguration {
 
+    private final CustomAuthenticationProvider customAuthenticationProvider;
+
+    public SecurityConfiguration(CustomAuthenticationProvider customAuthenticationProvider) {
+        this.customAuthenticationProvider = customAuthenticationProvider;
+    }
+
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(
+            HttpSecurity http, LoginSocialSuccessHandler successHandler) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(Customizer.withDefaults())
-                .formLogin(configurer -> configurer.loginPage("/login"))
+                .formLogin(configurer -> {
+                    configurer.loginPage("/login");
+                })
                 .authorizeHttpRequests(authorize -> {
                     authorize.requestMatchers("/login/**").permitAll();
-                    authorize.requestMatchers(HttpMethod.POST, "/api/v1/usuarios/**").permitAll();
+                    authorize.requestMatchers(HttpMethod.POST, "/usuarios/**").permitAll();
+
                     authorize.anyRequest().authenticated();
+                })
+                .oauth2Login(oauth2 -> {
+                    oauth2
+                            .loginPage("/login")
+                            .successHandler(successHandler);
                 })
                 .build();
     }
@@ -44,9 +62,7 @@ public class SecurityConfiguration {
     public GrantedAuthorityDefaults grantedAuthorityDefaults(){
         return new GrantedAuthorityDefaults("");
     }
-
 }
-
 /*
 A estrutura de um SecurityFilterChain no Spring Security é, por dentro, a configuração de uma cadeia (pipeline) de filtros HTTP que intercepta toda requisição antes de chegar nos seus controllers. Você configura essa cadeia usando o objeto HttpSecurity.
 
