@@ -50,6 +50,9 @@ where login = 'gerente'
 
 select * from usuario where login = 'gerente';
 
+delete from usuario
+where login = 'gerente';
+
 select * from autor
 where id_usuario = (select id from usuario where login = 'gerente');
 
@@ -63,6 +66,8 @@ values (
   gen_random_uuid(),
   'gerente',
   'gerente@teste.com',
-  '****************************',
+  '$2a$13$ywcSDX60NxgT4FmnFQBjuOVrdy86hmlrHL6MsHH3xs1fEfDXM6v/.',
   '{"ROLE_GERENTE"}'
 );
+
+

@@ -24,6 +24,7 @@ public record AutorDTO(
 
         public Autor toEntity(){
                 Autor autor = new Autor();
+                autor.setId(this.id);
                 autor.setNome(this.nome);
                 autor.setDataNascimento(this.dataNascimento);
                 autor.setNacionalidade(this.nacionalidade);

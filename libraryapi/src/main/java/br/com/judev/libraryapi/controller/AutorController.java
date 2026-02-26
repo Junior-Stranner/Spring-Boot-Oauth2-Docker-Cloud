@@ -23,7 +23,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("api/v1/autores")
+@RequestMapping("/api/v1/autores")
 public class AutorController implements GenericController{
 
     private final AutorService autorService;
@@ -48,7 +48,7 @@ public class AutorController implements GenericController{
         return ResponseEntity.created(location).build();
     }
 
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
     @PreAuthorize("hasRole('GERENTE')")
     public ResponseEntity<?> atualizar(@PathVariable("id") String id, @RequestBody @Valid AutorDTO dto) {
      try{
@@ -72,7 +72,7 @@ public class AutorController implements GenericController{
       }
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('OPERADOR', 'GERENTE')")
     public ResponseEntity<AutorDTO> obterDetalhes(@PathVariable("id") String id) {
         var idAutor = UUID.fromString(id);
@@ -104,7 +104,7 @@ public class AutorController implements GenericController{
         return ResponseEntity.ok(lista);
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('GERENTE')")
     public ResponseEntity<Void> deletar(@PathVariable("id") String id) {
         var idAutor = UUID.fromString(id);
@@ -113,7 +113,6 @@ public class AutorController implements GenericController{
         if (autorOptional.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-
         autorService.deletar(autorOptional.get().getId());
         return ResponseEntity.noContent().build();
     }
