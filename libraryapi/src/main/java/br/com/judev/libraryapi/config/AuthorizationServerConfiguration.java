@@ -11,6 +11,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+// ✅ Pacote correto (versões recentes)
 import org.springframework.security.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.config.annotation.web.configurers.oauth2.server.authorization.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.core.GrantedAuthority;
@@ -39,25 +40,29 @@ import java.util.UUID;
 @EnableWebSecurity
 public class AuthorizationServerConfiguration {
 
-    @Bean
-    @Order(1)
-    public SecurityFilterChain authServerSecurityFilterChain(HttpSecurity http) throws Exception {
+    @Configuration
+    @EnableWebSecurity
+    public class AuthorizationServerConfig {
 
-        // endpoints padrões do Authorization Server (/oauth2/token, /oauth2/authorize, /oauth2/jwks, etc.)
-        OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
+        @Bean
+        @Order(1)
+        public SecurityFilterChain authServerFilterChain(HttpSecurity http) throws Exception {
 
-        // habilita OpenID Connect (/.well-known/openid-configuration, etc.)
-        http.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
-                .oidc(Customizer.withDefaults());
+            // endpoints padrões do Authorization Server (/oauth2/token, /oauth2/authorize, /oauth2/jwks, etc.)
+            OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
 
-        // habilita validação de JWT para endpoints protegidos (resource server)
-        http.oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
+            // habilita OpenID Connect (/.well-known/openid-configuration, etc.)
+            http.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
+                    .oidc(Customizer.withDefaults());
 
-        // login form para o fluxo de authorization_code (redireciona para /login)
-        http.formLogin(form -> form.loginPage("/login"));
+            // habilita validação de JWT para endpoints protegidos (resource server)
+            http.oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
 
-        return http.build();
-    }
+            // login form para o fluxo de authorization_code (redireciona para /login)
+            http.formLogin(form -> form.loginPage("/login"));
+
+            return http.build();
+        }
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -121,8 +126,7 @@ public class AuthorizationServerConfiguration {
                 // authorization endpoint
                 .authorizationEndpoint("/oauth2/authorize")
                 // informacoes do usuario OPEN ID CONNECT
-                .oidcUserInfoEndpoint("/oauth2/iserinfo")
-                // obter a chave publica pra verificar a asstinatura do token
+                .oidcUserInfoEndpoint("/oauth2/userinfo")  // ✅ correto                // obter a chave publica pra verificar a asstinatura do token
                 .jwkSetEndpoint("/oauth2/jwks")
                 // logout
                 .oidcLogoutEndpoint("/oauth2/logout")
@@ -147,7 +151,6 @@ public class AuthorizationServerConfiguration {
                             .claim("email", authentication.getUsuario().getEmail());
                 }
             }
-
         };
     }
 }

@@ -1,0 +1,24 @@
+AuthorizationServerConfiguration
+│
+├── 🔗 authServerFilterChain()     → Configura os ENDPOINTS do OAuth2
+│     ├── applyDefaultSecurity()   → Registra endpoints padrão (/oauth2/token, etc.)
+│     ├── oidc()                   → Habilita OpenID Connect
+│     ├── oauth2ResourceServer()   → Valida JWT nos endpoints protegidos
+│     └── formLogin()              → Tela de login pro fluxo authorization_code
+│
+├── 🔒 passwordEncoder()           → Como as senhas são criptografadas (BCrypt)
+│
+├── ⏱️ tokenSettings()             → Formato do token (JWT) + tempo de vida (60 min)
+│
+├── 📋 clientSettings()            → Config dos clientes (não pede consentimento)
+│
+├── 🔑 gerarChaveRSA()            → Gera par de chaves (publica/privada) pra assinar JWT
+│
+├── 🔑 jwkSource()                → Fornece as chaves RSA pro servidor
+│
+├── 🔍 jwtDecoder()               → Decodifica/valida tokens JWT recebidos
+│
+├── ⚙️ authorizationServerSettings() → Define as URLs dos endpoints OAuth2
+│
+└── ✏️ tokenCustomizer()           → Adiciona claims customizados no token
+                                     (authorities + email do usuário)
